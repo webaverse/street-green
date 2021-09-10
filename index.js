@@ -2,6 +2,19 @@ import * as THREE from 'three';
 import metaversefile from 'metaversefile';
 const {useApp, useFrame, useInternals} = metaversefile;
 
+const localVector = new THREE.Vector3();
+
+function _loadImage(u) {
+  return new Promise(function(resolve, reject) {
+    var img = new Image();
+    img.onload = () => {
+      resolve(img);
+    };
+    img.onerror = reject;
+    img.src = u;
+  });
+}
+
 export default () => {
   const app = useApp();
   
@@ -22,16 +35,19 @@ export default () => {
 	
   // console.log('got bounding box', boundingBox);
   
-	const u = `${import.meta.url.replace(/(\/)[^\/]*$/, '$1')}street.png`;
-  const img = await _loadImage(u);
-	const tex = new THREE.Texture(img);
+	const tex = new THREE.Texture();
 	// tex.minFilter = THREE.NearestFilter;
 	tex.magFilter = THREE.NearestFilter;
 	tex.wrapS = THREE.RepeatWrapping;
 	tex.wrapT = THREE.RepeatWrapping;
 	tex.anisotropy = 16;
-	tex.needsUpdate = true;
-	
+	(async () => {
+    const u = `${import.meta.url.replace(/(\/)[^\/]*$/, '$1')}street.png`;
+    const img = await _loadImage(u);
+    tex.image = img;
+    tex.needsUpdate = true;
+  })();
+  
 	const material = new THREE.ShaderMaterial({
     uniforms: {
       tex: {
