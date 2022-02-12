@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import metaversefile from 'metaversefile';
-const {useApp, useFrame, useInternals} = metaversefile;
+const {useApp, useFrame, useMaterials} = metaversefile;
 
 const localVector = new THREE.Vector3();
+const localMatrix = new THREE.Matrix4();
 
 function _loadImage(u) {
   return new Promise(function(resolve, reject) {
@@ -17,13 +18,14 @@ function _loadImage(u) {
 
 export default () => {
   const app = useApp();
+	const {WebaverseShaderMaterial} = useMaterials();
   
   const w = 8;
 	const h = 0.2;
 	const d = 100;
   const geometry = new THREE.BoxBufferGeometry(w, h, d)
 	  .applyMatrix4(
-	    new THREE.Matrix4().makeTranslation(0, -h/2, 0)
+	    localMatrix.makeTranslation(0, -h/2, 0)
 		)
 		/* .applyMatrix4(
 		  new THREE.Matrix4()
@@ -48,7 +50,7 @@ export default () => {
     tex.needsUpdate = true;
   })();
   
-	const material = new THREE.ShaderMaterial({
+	const material = new WebaverseShaderMaterial({
     uniforms: {
       tex: {
         type: 't',
@@ -359,7 +361,7 @@ export default () => {
 		  color: 0x000000,
 			side: THREE.DoubleSide,
 		});
-		/* const material = new THREE.ShaderMaterial({
+		/* const material = new WebaverseShaderMaterial({
 			uniforms: {
 				tex: {
 					type: 't',
