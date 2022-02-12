@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import metaversefile from 'metaversefile';
-const {useApp, useFrame, useMaterials} = metaversefile;
+const {useApp, useFrame, useMaterials, usePhysics, useCleanup} = metaversefile;
 
 const localVector = new THREE.Vector3();
 const localMatrix = new THREE.Matrix4();
@@ -448,6 +448,18 @@ export default () => {
 	mesh.add(waveMesh);
 	
   app.add(mesh);
+
+	const physics = usePhysics();
+	const floorPhysicsId = physics.addBoxGeometry(
+		new THREE.Vector3(0, -h/2, 0),
+		app.quaternion,
+		new THREE.Vector3(w, h, d).multiplyScalar(0.5),
+		false
+	);
+
+	useCleanup(() => {
+		physics.removeGeometry(floorPhysicsId);
+	});
   
   return app;
 };
