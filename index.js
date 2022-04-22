@@ -259,6 +259,10 @@ export default () => {
     // polygonOffset: true,
     // polygonOffsetFactor: -1,
     // polygonOffsetUnits: 1,
+
+		clipping: false,
+		fog: false,
+		lights: false,
   });
   const mesh = new THREE.Mesh(geometry, material);
   useFrame(() => {
