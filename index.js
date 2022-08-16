@@ -253,6 +253,9 @@ export default () => {
 						gl_FragColor = vec4(1., 1., 1., 1.);
 					}
 		    }
+
+        #include <tonemapping_fragment>
+        #include <encodings_fragment>
       }
     `,
     // transparent: true,
